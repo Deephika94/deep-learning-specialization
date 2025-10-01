@@ -47,7 +47,7 @@ This motes be used only for learning purpose
       * [Training a Softmax classifier](#training-a-softmax-classifier)
       * [Deep learning frameworks](#deep-learning-frameworks)
       * [TensorFlow](#tensorflow)
-   * [Extra Notes](#extra-notes)
+   
 
 ## Course summary
 
