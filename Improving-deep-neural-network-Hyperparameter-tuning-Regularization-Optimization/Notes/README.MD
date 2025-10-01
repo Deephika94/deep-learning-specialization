@@ -869,18 +869,6 @@ _**Side notes:**_
 - For 3-layer NN, it is important to note that the forward propagation stops at `Z3`. The reason is that in TensorFlow the last linear layer output is given as input to the function computing the loss. Therefore, you don't need `A3`!
 - To reset the graph use `tf.reset_default_graph()`
 
-## Extra Notes
-
-- If you want a good papers in deep learning look at the ICLR proceedings (Or NIPS proceedings) and that will give you a really good view of the field.
-- Who is Yuanqing Lin?
-  - Head of Baidu research.
-  - First one to win ImageNet
-  - Works in PaddlePaddle deep learning platform.
-
-
-
-
-
 
 
 
@@ -888,5 +876,3 @@ _**Side notes:**_
 
 <br><br>
 <br><br>
-These Notes were made by [Mahmoud Badry](mailto:mma18@fayoum.edu.eg) @2017
-
