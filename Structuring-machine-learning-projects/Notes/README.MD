@@ -366,72 +366,28 @@ Here are the course summary as its given on the course [link](https://www.course
 
 ### Multi-task learning
 
-### Concept
-- In **transfer learning**, learning happens **sequentially** — you learn from **Task A** and then transfer that knowledge to **Task B**.  
-- In **multi-task learning**, you train **one neural network to perform several tasks simultaneously**.  
-- Each task helps improve the performance of the others through shared representations.
-
----
-
-### 📷 Example
-Suppose we want to build an **object recognition system** that detects:
-- Pedestrians  
-- Cars  
-- Stop signs  
-- Traffic lights  
-
-Each image can have **multiple labels**.  
-So, the output `Y` has the shape `(4, m)` — 4 classes, each a binary output.
-
-**Cost function:**
-\[
-J = \frac{1}{m} \sum_i \sum_j L(\hat{y}^{(i)}_j, y^{(i)}_j)
-\]
-where  
-\[
-L = - y^{(i)}_j \log(\hat{y}^{(i)}_j) - (1 - y^{(i)}_j) \log(1 - \hat{y}^{(i)}_j)
-\]
-
----
-
-### 🧩 Shared Learning
-Instead of training 4 separate neural networks (one per object type), we train **a single network** that shares **early layers/features** among all tasks.
-
-> ✅ Shared features improve generalization and often outperform training each task separately.
-
----
-
-### 📉 Handling Missing Labels
-Multi-task learning can handle **incomplete label data**:
-
-Example:
-
+- Whereas in transfer learning, you have a sequential process where you learn from task A and then transfer that to task B. In multi-task learning, you start off simultaneously, trying to have one neural network do several things at the same time. And then each of these tasks helps hopefully all of the other tasks. 
+- Example:
+  - You want to build an object recognition system that detects pedestrians, cars, stop signs, and traffic lights (image has multiple labels).
+  - Then Y shape will be `(4,m)` because we have 4 classes and each one is a binary one.
+  - Then   
+  `Cost = (1/m) * sum(sum(L(y_hat(i)_j, y(i)_j))), i = 1..m, j = 1..4`, where   
+  `L = - y(i)_j * log(y_hat(i)_j) - (1 - y(i)_j) * log(1 - y_hat(i)_j)`
+- In the last example you could have trained 4 neural networks separately but if some of the earlier features in neural network can be shared between these different types of objects, then you find that training one neural network to do four things results in better performance than training 4 completely separate neural networks to do the four tasks separately. 
+- Multi-task learning will also work if y isn't complete for some labels. For example:
   ```
   Y = [1 ? 1 ...]
       [0 0 1 ...]
       [? 1 ? ...]
   ```
-
-If a label is missing (`?`), we **exclude it from the loss**:
-
-\[
-J = \frac{1}{m} \sum_i \sum_{j : y^{(i)}_j \neq ?} L(\hat{y}^{(i)}_j, y^{(i)}_j)
-\]
-
----
-
-### ✅ When Multi-Task Learning Makes Sense
-- Tasks share **common low-level features**.  
-- Each task has **a similar amount of data**.  
-- The network is **large enough** to learn all tasks well.
-
-If those conditions are met, **multi-task learning** typically performs **better** than training tasks separately.
-
----
-
-### ⚖️ Today’s Usage
-Although powerful, **transfer learning** is **more commonly used** in practice than multi-task learning — mainly due to easier implementation and widespread pre-trained models.
-
+  - And in this case it will do good with the missing data, just the loss function will be different:   
+    `Loss = (1/m) * sum(sum(L(y_hat(i)_j, y(i)_j) for all j which y(i)_j != ?))`
+- Multi-task learning makes sense:
+  1. Training on a set of tasks that could benefit from having shared lower-level features.
+  2. Usually, amount of data you have for each task is quite similar.
+  3. Can train a big enough network to do well on all the tasks.
+- If you can train a big enough NN, the performance of the multi-task learning compared to splitting the tasks is better.
+- Today transfer learning is used more often than multi-task learning.
 
 ### What is end-to-end deep learning?
 
