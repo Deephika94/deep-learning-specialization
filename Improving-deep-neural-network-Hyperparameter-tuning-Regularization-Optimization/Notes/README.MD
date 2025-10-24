@@ -787,6 +787,14 @@ Implications of L2-regularization on:
 ### TensorFlow
 
 - In this section we will learn the basic structure of TensorFlow programs.
+- tf.Variable is used when you want to store values that can change — like weights in a neural network
+    ```python
+    w = tf.Variable(0.0, dtype=tf.float32)
+    ```
+- tf.constant: Fixed value that cannot change and is used for input data or constants
+    ```python
+    x = tf.constant([1.0,2.0,3.0,4.0,5.0,6.0])
+    ```
 - Lets see how to implement a minimization function:
   - Example function: `J(w) = w^2 - 10w + 25`
   - The result should be `w = 5` as the function is `(w-5)^2 = 0`
@@ -798,7 +806,7 @@ Implications of L2-regularization on:
     
     w = tf.Variable(0, dtype=tf.float32)                 # creating a variable w
     cost = tf.add(tf.add(w**2, tf.multiply(-10.0, w)), 25.0)        # can be written as this - cost = w**2 - 10*w + 25
-    train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)
+    train = tf.train.GradientDescentOptimizer(0.01).minimize(cost) # tells TensorFlow to use gradient descent with a learning rate of 0.01
 
     init = tf.global_variables_initializer()
     session = tf.Session()
@@ -813,33 +821,34 @@ Implications of L2-regularization on:
 
     print("W after 1000 iterations:", session.run(w))
     ```
-  - Code v.2 (we feed the inputs to the algorithm through coefficients):
+  - Code v.2 TensorFlow 2 version (we feed the inputs to the algorithm through coefficients):
 
     ```python
     import numpy as np
     import tensorflow as tf
+
+    w = tf.Variable(0.0, dtype=tf.float32)
+    optimizer = tf.keras.optimizers.SGD(learning_rate=0.01)
     
+    def cost_fn():
+        return w**2 - 10.0*w + 25.0
     
-    coefficients = np.array([[1.], [-10.], [25.]])
+    # One iteration
+    with tf.GradientTape() as tape:
+        loss = cost_fn()
+    grads = tape.gradient(loss, [w])
+    optimizer.apply_gradients(zip(grads, [w]))
+    print("W after one iteration:", float(w.numpy()))
+    
+    # Many iterations
+    for _ in range(1000):
+        with tf.GradientTape() as tape:
+            loss = cost_fn()
+        grads = tape.gradient(loss, [w])
+        optimizer.apply_gradients(zip(grads, [w]))
+    
+    print("W after 1000 iterations:", float(w.numpy()))
 
-    x = tf.placeholder(tf.float32, [3, 1])
-    w = tf.Variable(0, dtype=tf.float32)                 # Creating a variable w
-    cost = x[0][0]*w**2 + x[1][0]*w + x[2][0]
-
-    train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)
-
-    init = tf.global_variables_initializer()
-    session = tf.Session()
-    session.run(init)
-    session.run(w)    # Runs the definition of w, if you print this it will print zero
-    session.run(train, feed_dict={x: coefficients})
-
-    print("W after one iteration:", session.run(w))
-
-    for i in range(1000):
-    	session.run(train, feed_dict={x: coefficients})
-
-    print("W after 1000 iterations:", session.run(w))
     ```
 - In TensorFlow you implement only the forward propagation and TensorFlow will do the backpropagation by itself.
 - In TensorFlow a placeholder is a variable you can assign a value to later.
